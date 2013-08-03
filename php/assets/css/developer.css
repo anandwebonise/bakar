@@ -47,3 +47,13 @@
     width: 100%;
     margin-top: 34px;
 }
+.highlightWhite iframe{
+    width: 100%;
+    height: 266px;
+}
+.fileContainer{
+    height: 275px;;
+}
+.fileContainerMain{
+    height: auto;
+}
