@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/developer.css" rel="stylesheet">
+    <script src="assets/js/jquery-1.9.1.min.js"></script>
+    <script src="assets/js/bootstrap.js"></script>
+</head>
+<body>
+<form class="well form-search">
+    <div class="control-group">
+        <label for="room" class="control-label">Create Room</label>
+        <div class="controls">
+            <input type="text" id="room"> &nbsp; <input class="btn btn-inverse" type="button" value="Create" id="connect">
+        </div>
+    </div>
+    <div class="control-group">
+        <label for="j_room" class="control-label">Join Room</label>
+        <div class="controls">
+            <input type="text" id="j_room"> &nbsp;<input class="btn btn-inverse" type="button" value="Join" id="join">
+        </div>
+    </div>
+    <div class="control-group">
+        <label for="j_room" class="control-label">Send File</label>
+        <div class="controls">
+            <input type="file" id="file"> &nbsp; <input  class="btn btn-inverse" type="button" value="send" id="send_file">
+        </div>
+    </div>
+</form>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+
+<script src="https://www.webrtc-experiment.com/RTCMultiConnection-v1.3.js"></script>
+<script type="text/javascript">
+    var connection = new RTCMultiConnection();
+
+    connection.session = {
+        data:true
+    };
+
+    connection.direction = 'one-to-one';
+
+    // to create/open a new session
+    $('#connect').click(function () {
+        console.log('Session: ' + $('#room').val());
+        connection.open($('#room').val());
+    });
+
+    $('#join').click(function () {
+        console.log('join: ' + $('#j_room').val());
+        connection.connect($('#j_room').val());
+    });
+    // if someone already created a session; to join it: use "connect" method
+    //        connection.connect('session-id');
+
+    // to send text/data or file
+    $('#send').click(function () {
+        console.log('Message: ' + $('#message').val());
+        connection.send($('#message').val());
+    });
+    //        connection.send(file || data || 'text');
+
+    $('#send_file').click(function () {
+        console.log($('#file')[0].files[0])
+        connection.send($('#file')[0].files[0]);
+    });
+
+    connection.onmessage = function (e) {
+        console.log(e);
+        $('#rec_msg').text(e.data);
+
+    }
+
+    connection.onFileSent = function (file) {
+        console.log('file sent')
+    };
+
+    connection.onFileReceived = function (fileName) {
+        console.log('file received')
+    };
+
+    connection.onFileProgress = function (packets) {
+        console.log(packets.remaining + ' packets remaining.');
+        if (packets.sent) console.log(packets.sent + ' packets sent.');
+        if (packets.received) console.log(packets.received + ' packets received.');
+    };
+</script>
+</body>
+</html>
